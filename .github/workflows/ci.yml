@@ -41,10 +41,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Récupérer le code source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Installer Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: '1.25'
           cache: true
@@ -63,13 +63,23 @@ jobs:
       - name: go vet
         run: go vet ./...
 
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: v1.64.8
+      - name: golangci-lint (v2)
+        # On COMPILE golangci-lint v2 avec la toolchain Go du job (Go 1.25), plutôt
+        # que de télécharger un binaire précompilé. C'est indispensable : un binaire
+        # golangci-lint bâti avec une version de Go plus ANCIENNE refuse d'analyser
+        # un module ciblant Go 1.25, avec l'erreur « the Go language version used to
+        # build golangci-lint is lower than the targeted Go version ». En le compilant
+        # ici avec la même toolchain que le projet, on garantit la compatibilité.
+        # (golangci-lint v1 ne supporte pas Go 1.25 : il FAUT la v2.)
+        run: |
+          go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.12.2
+          "$(go env GOPATH)/bin/golangci-lint" run ./...
 
       - name: staticcheck
-        run: go run honnef.co/go/tools/cmd/staticcheck@latest ./...
+        # « go run » compile staticcheck avec la toolchain du job (Go 1.25), ce qui
+        # garantit la compatibilité (comme pour golangci-lint). Version épinglée
+        # pour la reproductibilité.
+        run: go run honnef.co/go/tools/cmd/staticcheck@2025.1 ./...
 
       - name: Compiler
         run: go build ./...
@@ -123,10 +133,10 @@ jobs:
       JWT_SECRET: ci-secret-de-test-uniquement-32-caracteres-minimum
     steps:
       - name: Récupérer le code source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Installer Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: '1.25'
           cache: true
