@@ -1,0 +1,23 @@
+-- =============================================================================
+-- V001__schema_initial.sql — Version 1 : schéma initial
+-- -----------------------------------------------------------------------------
+-- Cette « version 1 » représente l'état initial du schéma. Dans ce projet
+-- pédagogique, le schéma initial complet est fourni sous forme de scripts
+-- d'initialisation lisibles et commentés dans :
+--
+--     sql/schema/      (base, tables, index)
+--     sql/functions/   (fonctions)
+--     sql/views/       (vues)
+--     sql/procedures/  (procédures)
+--     sql/triggers/    (triggers)
+--     sql/events/      (events)
+--
+-- Pour repartir d'une base vierge, exécutez ces scripts dans l'ordre (c'est ce
+-- que fait automatiquement Docker au premier démarrage).
+--
+-- Les migrations SUIVANTES (V002, V003…) contiennent uniquement les évolutions
+-- incrémentales à appliquer sur une base déjà initialisée.
+-- =============================================================================
+
+-- (Aucune instruction ici : ce fichier documente le point de départ versionné.)
+SELECT 'Schéma initial : voir les scripts de sql/schema, functions, views, etc.' AS information;
