@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Récupérer le code source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Installer Go
         uses: actions/setup-go@v5
@@ -123,7 +123,7 @@ jobs:
       JWT_SECRET: ci-secret-de-test-uniquement-32-caracteres-minimum
     steps:
       - name: Récupérer le code source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Installer Go
         uses: actions/setup-go@v5
