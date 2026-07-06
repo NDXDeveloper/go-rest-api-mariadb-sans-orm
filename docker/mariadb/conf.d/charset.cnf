@@ -1,0 +1,41 @@
+# =============================================================================
+# charset.cnf — Configuration du jeu de caractères et de la collation du serveur
+# -----------------------------------------------------------------------------
+# POURQUOI CE FICHIER ?
+#
+# Depuis MariaDB 11.4, la collation par défaut du serveur est
+# « utf8mb4_uca1400_ai_ci ». Or nos tables sont créées en
+# « utf8mb4_unicode_ci ». Si le serveur, la connexion et les tables n'utilisent
+# pas la MÊME collation, toute comparaison de chaînes entre une colonne et un
+# paramètre/littéral échoue avec l'erreur :
+#
+#     ERROR 1267 : Illegal mix of collations
+#
+# Ce bug se manifeste typiquement dans les PROCÉDURES stockées, où l'on compare
+# une colonne (collation de la table) avec un paramètre (collation du serveur).
+#
+# La parade propre : imposer une collation UNIQUE et cohérente à TOUS les
+# niveaux (serveur, connexion, base, tables). On choisit utf8mb4_unicode_ci,
+# largement compatible entre MySQL et MariaDB.
+#
+# Ce fichier est monté dans /etc/mysql/conf.d/ du conteneur (voir docker-compose.yml).
+# =============================================================================
+
+[mysqld]
+character-set-server = utf8mb4
+collation-server     = utf8mb4_unicode_ci
+
+# Le mode SQL « strict » (STRICT_TRANS_TABLES) refuse les données invalides
+# (troncatures silencieuses, dates « 0000-00-00 »...). C'est une bonne pratique :
+# mieux vaut une erreur explicite qu'une donnée corrompue en silence.
+sql_mode = "STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"
+
+# Fuseau horaire du serveur en UTC : on stocke tout en UTC et on convertit à
+# l'affichage côté client. Évite les ambiguïtés liées à l'heure d'été.
+default-time-zone = "+00:00"
+
+[client]
+default-character-set = utf8mb4
+
+[mysql]
+default-character-set = utf8mb4
