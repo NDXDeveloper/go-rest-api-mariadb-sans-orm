@@ -1,0 +1,47 @@
+# =============================================================================
+# .golangci.yml — Configuration de golangci-lint
+# -----------------------------------------------------------------------------
+# golangci-lint regroupe de nombreux analyseurs (« linters ») en un seul outil.
+# Cette configuration est pensée pour la version 1.x (voir le workflow CI, qui
+# épingle une version compatible). Lancement : « golangci-lint run ./... ».
+# =============================================================================
+
+run:
+  timeout: 5m
+  # On analyse aussi les fichiers de test.
+  tests: true
+
+linters:
+  # On part d'une liste vide et on active explicitement ce que l'on veut :
+  # comportement stable et prévisible.
+  disable-all: true
+  enable:
+    - errcheck # signale les erreurs retournées mais non vérifiées
+    - govet # équivalent de « go vet »
+    - ineffassign # affectations sans effet
+    - staticcheck # analyse avancée (inclut gosimple et stylecheck)
+    - unused # code mort (variables/fonctions non utilisées)
+    - revive # style et bonnes pratiques (successeur de golint)
+    - bodyclose # http.Response.Body non fermé (fuite de ressources)
+    - gosec # problèmes de sécurité courants
+    - gofmt # formatage standard
+
+linters-settings:
+  gosec:
+    excludes:
+      - G104 # doublon avec errcheck (erreurs non vérifiées)
+  revive:
+    rules:
+      - name: exported # exige un commentaire sur les éléments exportés
+        disabled: false
+
+issues:
+  # On ne masque pas les problèmes par défaut de golangci-lint.
+  exclude-use-default: false
+  exclude-rules:
+    # Dans les tests, on tolère quelques pratiques (erreurs ignorées volontairement).
+    - path: _test\.go
+      linters:
+        - gosec
+        - errcheck
+        - bodyclose
