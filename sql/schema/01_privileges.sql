@@ -20,6 +20,24 @@
 USE bibliotheque;
 
 -- -----------------------------------------------------------------------------
+-- 0) COHÉRENCE DE COLLATION (défense en profondeur, indépendante du serveur)
+--
+-- On force la base en utf8mb4_unicode_ci. C'est CRUCIAL : sur un serveur MariaDB
+-- 11.4+ dont la collation par défaut est « utf8mb4_uca1400_ai_ci » (par exemple
+-- un service MariaDB en intégration continue, sans fichier de configuration monté),
+-- les PARAMÈTRES des procédures stockées héritent de la collation de la base. S'ils
+-- diffèrent de celle des tables (utf8mb4_unicode_ci), toute comparaison
+-- « colonne = paramètre » échoue avec l'erreur « Illegal mix of collations », ce
+-- qui casse les procédures (emprunt, statistiques...).
+--
+-- En fixant explicitement la collation de la base ICI, AVANT la création des
+-- tables et des procédures, on garantit la cohérence quel que soit le réglage du
+-- serveur (le fichier docker/mariadb/conf.d/charset.cnf reste la solution
+-- privilégiée pour Docker, ceci en est le complément robuste).
+-- -----------------------------------------------------------------------------
+ALTER DATABASE bibliotheque CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- -----------------------------------------------------------------------------
 -- 1) On repart d'une ardoise vierge : suppression de TOUS les privilèges hérités.
 -- -----------------------------------------------------------------------------
 REVOKE ALL PRIVILEGES ON bibliotheque.* FROM 'app_bibliotheque'@'%';
