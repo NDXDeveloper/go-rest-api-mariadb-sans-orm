@@ -272,6 +272,7 @@ func lireListe(cle string, defaut []string) []string {
 //   - « export CLE=valeur » toléré ;
 //   - guillemets simples ou doubles optionnels autour de la valeur.
 func chargerFichierEnv(chemin string) error {
+	//nolint:gosec // G304 : le chemin est fixe (« .env »), défini par l'application et non par une entrée utilisateur.
 	fichier, err := os.Open(chemin)
 	if err != nil {
 		return err // fichier absent : ce n'est pas bloquant, l'appelant ignore l'erreur

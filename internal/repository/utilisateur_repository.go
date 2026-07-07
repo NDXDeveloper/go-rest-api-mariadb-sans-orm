@@ -152,6 +152,7 @@ func (r *UtilisateurRepository) Lister(ctx context.Context, params models.Parame
 
 	// 2) Page de résultats.
 	triPagination, argsPagination := clauseTriEtPagination(params, "cree_le")
+	//nolint:gosec // G202 : concaténation sûre — 'where' n'utilise que des '?' et 'triPagination' une colonne validée par liste blanche.
 	requete := `SELECT ` + colonnesUtilisateur + ` FROM utilisateurs ` + where + triPagination
 	args := append(conditions.args, argsPagination...)
 

@@ -199,6 +199,7 @@ func (r *EmpruntRepository) Lister(ctx context.Context, utilisateurUUID string, 
 
 	// Tri : on préfixe la colonne par « e. » pour lever toute ambiguïté de jointure.
 	triPagination, argsPagination := clauseTriEtPagination(params, "e.date_emprunt")
+	//nolint:gosec // G202 : concaténation sûre — 'where' n'utilise que des '?' et 'triPagination' une colonne validée par liste blanche.
 	requete := requeteBaseEmprunt + " " + where + triPagination
 	lignes, err := r.db.QueryContext(ctx, requete, append(conditions.args, argsPagination...)...)
 	if err != nil {

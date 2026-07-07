@@ -24,8 +24,10 @@ const (
 	// TailleMax : borne haute pour éviter qu'un client ne demande des millions
 	// de lignes d'un coup (protection mémoire / DoS).
 	TailleMax = 100
-	// OrdreAsc / OrdreDesc : les deux seules valeurs autorisées pour le sens du tri.
-	OrdreAsc  = "ASC"
+	// OrdreAsc : tri ascendant (valeur SQL « ASC »). Avec OrdreDesc, ce sont les
+	// deux seules valeurs autorisées pour le sens du tri.
+	OrdreAsc = "ASC"
+	// OrdreDesc : tri descendant (valeur SQL « DESC »).
 	OrdreDesc = "DESC"
 )
 

@@ -146,6 +146,7 @@ func (r *LivreRepository) Lister(ctx context.Context, params models.ParametresLi
 	}
 
 	triPagination, argsPagination := clauseTriEtPagination(params, "titre")
+	//nolint:gosec // G202 : concaténation sûre — 'where' n'utilise que des '?' et 'triPagination' une colonne validée par liste blanche.
 	requete := `SELECT ` + colonnesVueLivre + ` FROM vue_livres_details ` + where + triPagination
 	lignes, err := r.db.QueryContext(ctx, requete, append(conditions.args, argsPagination...)...)
 	if err != nil {
